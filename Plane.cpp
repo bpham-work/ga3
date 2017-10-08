@@ -24,6 +24,12 @@ Plane::Plane(int firstClassRows, int firstClassCols, int econRows, int econCols)
 }
 
 Plane::~Plane() {
+    for (int row = 0; row < this->firstClassRows; row++) {
+        delete [] this->firstClass[row]; 
+    }
+    for (int row = 0; row < this->econCols; row++) {
+        delete [] this->economy[row]; 
+    }
     delete [] this->firstClass;
     delete [] this->economy;
 }
@@ -32,9 +38,6 @@ void Plane::initSeatArrays() {
     this->firstClass = new Seat*[this->firstClassRows];
     for (int row = 0; row < this->firstClassRows; row++) {
         this->firstClass[row] = new Seat[this->firstClassCols](); 
-        for (int col = 0; col < this->firstClassCols; col++) {
-            //this->firstClass[row][col] = new Seat(); 
-        }
     }
     this->economy = new Seat*[this->econRows];
     for (int row = 0; row < this->econCols; row++) {
@@ -58,5 +61,35 @@ void Plane::displaySeats() {
             cout << this->economy[row][col].status << " ";
         }
         cout << endl;
+    }
+}
+
+void Plane::bookSeat() {
+    bool isFirstClass = false; 
+    int row;
+    int seatInRow;
+    cout << "Enter 1 to book a first class seat or 0 to book an economy seat: ";
+    cin >> isFirstClass;
+    cout << "Enter row number of the seat you'd like to book: ";
+    cin >> row;
+    cout << "Enter seat number you'd like to book: ";
+    cin >> seatInRow;
+
+    if (isFirstClass) {
+        Seat* seatToBook = &(this->firstClass[row][seatInRow]);
+        this->setSeatToBooked(&(*seatToBook));
+    } else {
+        Seat* seatToBook = &(this->economy[row][seatInRow]);
+        this->setSeatToBooked(&(*seatToBook));
+    }
+}
+
+void Plane::setSeatToBooked(Seat* seatToBook) {
+    if (!seatToBook->isBooked) {
+        seatToBook->isBooked = true;
+        seatToBook->status = 'x';
+        cout << "Seat booked" << endl;
+    } else {
+        cout << "This seat is already booked" << endl;
     }
 }

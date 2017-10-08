@@ -3,7 +3,7 @@
 
 struct Seat {
     char status = '-';
-    bool isBooked = false;;
+    bool isBooked = false;
 };
 
 class Plane {
@@ -25,6 +25,7 @@ class Plane {
         ~Plane();
     private:
         void initSeatArrays();
+        void setSeatToBooked(Seat* seatToBook);
 };
 
 #endif
