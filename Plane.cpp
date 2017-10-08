@@ -3,6 +3,7 @@
 using namespace std;
 
 Plane::Plane() {
+    cout << "CREATING PLANE" << endl;
     cout << "Enter number of first class rows: ";
     cin >> this->firstClassRows;
     cout << "Enter number of first class columns: ";
@@ -12,7 +13,7 @@ Plane::Plane() {
     cin >> this->econRows;
     cout << "Enter number of econ class columns: ";
     cin >> this->econCols;
-    this->initSeatArrays();
+    this->initAllSeats();
 }
 
 Plane::Plane(int firstClassRows, int firstClassCols, int econRows, int econCols) {
@@ -20,21 +21,14 @@ Plane::Plane(int firstClassRows, int firstClassCols, int econRows, int econCols)
     this->firstClassCols = firstClassCols;
     this->econRows = econRows;
     this->econCols = econCols;
-    this->initSeatArrays();
+    this->initAllSeats();
 }
 
 Plane::~Plane() {
-    for (int row = 0; row < this->firstClassRows; row++) {
-        delete [] this->firstClass[row]; 
-    }
-    for (int row = 0; row < this->econCols; row++) {
-        delete [] this->economy[row]; 
-    }
-    delete [] this->firstClass;
-    delete [] this->economy;
+    this->deleteAllSeats();
 }
 
-void Plane::initSeatArrays() {
+void Plane::initAllSeats() {
     this->firstClass = new Seat*[this->firstClassRows];
     for (int row = 0; row < this->firstClassRows; row++) {
         this->firstClass[row] = new Seat[this->firstClassCols](); 
@@ -45,7 +39,19 @@ void Plane::initSeatArrays() {
     }
 }
 
+void Plane::deleteAllSeats() {
+    for (int row = 0; row < this->firstClassRows; row++) {
+        delete [] this->firstClass[row]; 
+    }
+    for (int row = 0; row < this->econCols; row++) {
+        delete [] this->economy[row]; 
+    }
+    delete [] this->firstClass;
+    delete [] this->economy;
+}
+
 void Plane::displaySeats() {
+    cout << "PLANE SEATING MAP" << endl;
     cout << "First Class" << endl;
     cout << "-----------" << endl;
     for (int row = 0; row < this->firstClassRows; row++) {
@@ -75,21 +81,87 @@ void Plane::bookSeat() {
     cout << "Enter seat number you'd like to book: ";
     cin >> seatInRow;
 
-    if (isFirstClass) {
-        Seat* seatToBook = &(this->firstClass[row][seatInRow]);
-        this->setSeatToBooked(&(*seatToBook));
+    if (this->isValidSeat(isFirstClass, row, seatInRow)) {
+        Seat* seatToBook = this->getSeat(isFirstClass, row, seatInRow);
+        if (!seatToBook->isBooked) {
+            seatToBook->isBooked = true;
+            seatToBook->status = 'x';
+            cout << "Seat successfully booked" << endl;
+        } else {
+            cout << "This seat is already booked" << endl;
+        }
     } else {
-        Seat* seatToBook = &(this->economy[row][seatInRow]);
-        this->setSeatToBooked(&(*seatToBook));
+        cout << "Invalid seat selection" << endl;
     }
 }
 
-void Plane::setSeatToBooked(Seat* seatToBook) {
-    if (!seatToBook->isBooked) {
-        seatToBook->isBooked = true;
-        seatToBook->status = 'x';
-        cout << "Seat booked" << endl;
+void Plane::checkSeat() {
+    bool isFirstClass = false; 
+    int row;
+    int seatInRow;
+    cout << "Enter 1 to check a first class seat or 0 to check an economy seat: ";
+    cin >> isFirstClass;
+    cout << "Enter row number of the seat you'd like to check: ";
+    cin >> row;
+    cout << "Enter seat number you'd like to check: ";
+    cin >> seatInRow;
+
+    if (this->isValidSeat(isFirstClass, row, seatInRow)) {
+        Seat* seatToCheck = this->getSeat(isFirstClass, row, seatInRow);
+        if (seatToCheck->isBooked) {
+            cout << "Seat is booked" << endl;
+        } else {
+            cout << "Seat is not booked" << endl;
+        }
     } else {
-        cout << "This seat is already booked" << endl;
+        cout << "Invalid Seat Selection" << endl;
     }
 }
+
+void Plane::clearSeat() {
+    bool isFirstClass = false; 
+    int row;
+    int seatInRow;
+    cout << "Enter 1 to clear a first class seat or 0 to clear an economy seat: ";
+    cin >> isFirstClass;
+    cout << "Enter row number of the seat you'd like to clear: ";
+    cin >> row;
+    cout << "Enter seat number you'd like to clear: ";
+    cin >> seatInRow;
+
+    if (this->isValidSeat(isFirstClass, row, seatInRow)) {
+        Seat* seatToClear = this->getSeat(isFirstClass, row, seatInRow);
+        if (seatToClear->isBooked) {
+            seatToClear->isBooked = false;
+            seatToClear->status = '-';
+            cout << "Seat is cleared" << endl;
+        } else {
+            cout << "Seat was not cleared. Seat was not booked" << endl;
+        }
+    } else {
+        cout << "Invalid Seat Selection" << endl;
+    }
+}
+
+void Plane::clearAllSeats() {
+    this->deleteAllSeats();
+    this->initAllSeats();
+    cout << "All seats cleared" << endl;
+}
+
+Seat* Plane::getSeat(bool isFirstClass, int rowNum, int seatNum) {
+    if (isFirstClass) {
+        return &(this->firstClass[rowNum][seatNum]);
+    } else {
+        return &(this->economy[rowNum][seatNum]);
+    }
+}
+
+bool Plane::isValidSeat(bool isFirstClass, int rowNum, int seatNum) {
+    if (isFirstClass) {
+        return this->firstClassRows >= rowNum && this->firstClassCols >= seatNum;
+    } else {
+        return this->econRows >= rowNum && this->econCols >= seatNum;
+    }
+}
+

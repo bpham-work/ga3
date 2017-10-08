@@ -24,8 +24,10 @@ class Plane {
         void clearAllSeats();
         ~Plane();
     private:
-        void initSeatArrays();
-        void setSeatToBooked(Seat* seatToBook);
+        void initAllSeats();
+        void deleteAllSeats();
+        Seat* getSeat(bool isFirstClass, int rowNum, int seatNum);
+        bool isValidSeat(bool isFirstClass, int rowNum, int seatNum);
 };
 
 #endif
