@@ -79,7 +79,7 @@ void Plane::bookSeat() {
     if (isFirstClass) {
         cout << "Enter row number 0-" << this->firstClassRows-1 << " of the seat you'd like to book: ";
         cin >> row;
-        cout << "Enter seat number 0-" << this->firstClassCols-1 << "you'd like to book: ";
+        cout << "Enter seat number 0-" << this->firstClassCols-1 << " you'd like to book: ";
         cin >> seatInRow;
     } else {
         cout << "Enter row number 0-" << this->econRows-1 <<  " of the seat you'd like to book: ";
@@ -111,7 +111,7 @@ void Plane::checkSeat() {
     if (isFirstClass) {
         cout << "Enter row number 0-" << this->firstClassRows-1 << " of the seat you'd like to check: ";
         cin >> row;
-        cout << "Enter seat number 0-" << this->firstClassCols-1 << "you'd like to check: ";
+        cout << "Enter seat number 0-" << this->firstClassCols-1 << " you'd like to check: ";
         cin >> seatInRow;
     } else {
         cout << "Enter row number 0-" << this->econRows-1 <<  " of the seat you'd like to check: ";
@@ -141,7 +141,7 @@ void Plane::clearSeat() {
     if (isFirstClass) {
         cout << "Enter row number 0-" << this->firstClassRows-1 << " of the seat you'd like to clear: ";
         cin >> row;
-        cout << "Enter seat number 0-" << this->firstClassCols-1 << "you'd like to clear: ";
+        cout << "Enter seat number 0-" << this->firstClassCols-1 << " you'd like to clear: ";
         cin >> seatInRow;
     } else {
         cout << "Enter row number 0-" << this->econRows-1 <<  " of the seat you'd like to clear: ";

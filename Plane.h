@@ -2,8 +2,9 @@
 #define PLANE_H
 
 struct Seat {
-    char status = '-';
-    bool isBooked = false;
+    char status;
+    bool isBooked;
+    Seat(): status('-'), isBooked(false) {}
 };
 
 class Plane {
